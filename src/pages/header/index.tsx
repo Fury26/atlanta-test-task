@@ -6,7 +6,9 @@ import styles from './index.module.scss';
 const Header: React.FC = () => {
 	return (
 		<div className={styles.header}>
-			<Link to="/">GitHub Searcher</Link>
+			<Link to="/" reloadDocument>
+				GitHub Searcher
+			</Link>
 		</div>
 	);
 };

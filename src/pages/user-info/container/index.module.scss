@@ -42,13 +42,31 @@
 }
 
 .reposetories {
+	--padding-inline: 2em;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	padding-inline: 2em;
+	padding-inline: var(--padding-inline);
 	margin-inline: auto;
 	gap: 12px;
 	padding-bottom: 2em;
+	position: relative;
+
+	&Loader {
+		position: absolute;
+		width: calc(100% - var(--padding-inline) * 2);
+		height: 100%;
+		inset: 0;
+		opacity: 0.7;
+		margin-inline: var(--padding-inline);
+		background-color: lightgrey;
+		z-index: 200;
+
+		& > * {
+			margin-inline: auto;
+			margin-top: 5em;
+		}
+	}
 }
 
 .loader {

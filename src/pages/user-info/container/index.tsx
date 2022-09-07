@@ -17,7 +17,7 @@ import styles from './index.module.scss';
 
 const UserInfo = () => {
 	const { currentUser: user } = useStore($usersStore);
-	const { reposetories, searchName } = useStore($reposetoriesStore);
+	const { reposetories, searchName, isLoading } = useStore($reposetoriesStore);
 	const [repoName, setRepoName] = useState('');
 
 	const { id } = useParams();
@@ -77,6 +77,12 @@ const UserInfo = () => {
 		);
 	}
 
+	const loader = isLoading ? (
+		<div className={styles.reposetoriesLoader}>
+			<Loader />
+		</div>
+	) : null;
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.infoBlock}>
@@ -93,6 +99,7 @@ const UserInfo = () => {
 			<p className={styles.bio}>{user.bio || 'Bio is not specified'}</p>
 			<Input initValue={searchName || repoName} onChange={(val) => setRepoName(val)} placeholder="Search reposetories" />
 			<div className={styles.reposetories}>
+				{loader}
 				{reposetories.map((repo) => (
 					<ReposetoryRow
 						key={repo.id}
