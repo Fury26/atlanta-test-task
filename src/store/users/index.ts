@@ -4,14 +4,12 @@ import { User, Users } from '../../github-api/requests';
 import { addEvents } from './events';
 
 export type State = {
-	users: Users;
+	users?: Users;
 	currentUser?: User;
+	searchUser: string;
+	isLoading: boolean;
 };
 
-const $usersStore = addEvents(
-	createStore<State>({
-		users: [],
-	}),
-);
+const $usersStore = addEvents(createStore<State>({ searchUser: '', isLoading: false }));
 
 export default $usersStore;

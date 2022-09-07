@@ -17,6 +17,8 @@
 
 .infoBlock {
 	display: grid;
+	max-width: 100%;
+	margin-inline: auto;
 	grid-template-columns: 1fr 1fr;
 	gap: 5em;
 
@@ -33,9 +35,10 @@
 }
 
 .bio {
-	max-height: 300px;
+	max-height: 150px;
 	overflow-wrap: normal;
 	overflow-y: auto;
+	max-width: 70%;
 }
 
 .reposetories {
@@ -44,6 +47,35 @@
 	width: 100%;
 	padding-inline: 2em;
 	margin-inline: auto;
-	box-sizing: border-box;
 	gap: 12px;
+	padding-bottom: 2em;
+}
+
+.loader {
+	max-width: 100%;
+	margin-top: 5em;
+
+	& > * {
+		margin-inline: auto;
+	}
+}
+
+@media (max-width: 600px) {
+	.infoBlock {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 400px) {
+	.infoBlock {
+		img {
+			width: 160px;
+			justify-self: center;
+		}
+		width: 100%;
+
+		&Texts {
+			margin-left: 2em;
+		}
+	}
 }

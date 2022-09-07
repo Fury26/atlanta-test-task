@@ -3,20 +3,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import { getUserByName, searchUserRepositories } from 'github-api/requests';
 import $reposetoriesStore from 'store/reposetories';
-import { setReposetories } from 'store/reposetories/events';
+import { setReposetories, setSearchName } from 'store/reposetories/events';
 import $usersStore from 'store/users';
 import { setCurrentUser } from 'store/users/events';
 
 import useDidUpdate from 'hooks/useDidUpdate';
 
 import Input from 'components/debaunce-input';
+import Loader from 'components/loader';
 
 import ReposetoryRow from '../reposetory-row';
 import styles from './index.module.scss';
 
 const UserInfo = () => {
 	const { currentUser: user } = useStore($usersStore);
-	const { reposetories } = useStore($reposetoriesStore);
+	const { reposetories, searchName } = useStore($reposetoriesStore);
 	const [repoName, setRepoName] = useState('');
 
 	const { id } = useParams();
@@ -30,13 +31,21 @@ const UserInfo = () => {
 		setCurrentUser(res);
 	}, [id, navigate]);
 
-	const searchRepositories = useCallback(async () => {
-		if (!id) {
-			return;
-		}
-		const res = await searchUserRepositories(id, repoName);
-		setReposetories(res);
-	}, [id, repoName]);
+	useEffect(() => {
+		setSearchName(repoName);
+	}, [repoName]);
+
+	const searchRepositories = useCallback(
+		async (defaultName?: string) => {
+			if (!id) {
+				return;
+			}
+			const name = defaultName || repoName;
+			const res = await searchUserRepositories(id, name);
+			setReposetories(res);
+		},
+		[id, repoName],
+	);
 
 	useEffect(() => {
 		if (user?.login === id) {
@@ -50,14 +59,22 @@ const UserInfo = () => {
 	}, [searchRepositories, repoName]);
 
 	useEffect(() => {
-		if (reposetories.length) {
+		if (reposetories.length && id === user?.login) {
 			return;
 		}
-		searchRepositories();
+		searchRepositories(searchName);
 	}, []);
 
 	if (!user) {
 		return null;
+	}
+
+	if (user.login !== id) {
+		return (
+			<div className={styles.loader}>
+				<Loader />
+			</div>
+		);
 	}
 
 	return (
@@ -74,7 +91,7 @@ const UserInfo = () => {
 				</div>
 			</div>
 			<p className={styles.bio}>{user.bio || 'Bio is not specified'}</p>
-			<Input initValue={repoName} onChange={(val) => setRepoName(val)} placeholder="Search reposetories" />
+			<Input initValue={searchName || repoName} onChange={(val) => setRepoName(val)} placeholder="Search reposetories" />
 			<div className={styles.reposetories}>
 				{reposetories.map((repo) => (
 					<ReposetoryRow
