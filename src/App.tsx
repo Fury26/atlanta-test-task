@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import Header from './pages/header';
 import SearchUsers from './pages/searh-users/container';
@@ -15,6 +15,7 @@ const App = () => {
 				<Routes>
 					<Route path="/" element={<SearchUsers />} />
 					<Route path="users/:id" element={<UserInfo />} />
+					<Route path="*" element={<Navigate to="/" />} />
 				</Routes>
 			</div>
 		</HashRouter>

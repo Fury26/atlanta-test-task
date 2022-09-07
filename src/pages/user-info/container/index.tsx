@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useStore } from 'effector-react';
 import { getUserByName, searchUserRepositories } from 'github-api/requests';
+import moment from 'moment';
 import $reposetoriesStore from 'store/reposetories';
 import { setReposetories, setSearchName } from 'store/reposetories/events';
 import $usersStore from 'store/users';
@@ -65,11 +66,7 @@ const UserInfo = () => {
 		searchRepositories(searchName);
 	}, []);
 
-	if (!user) {
-		return null;
-	}
-
-	if (user.login !== id) {
+	if (!user || user.login !== id) {
 		return (
 			<div className={styles.loader}>
 				<Loader />
@@ -91,7 +88,7 @@ const UserInfo = () => {
 					<span>{user.login}</span>
 					<span>{user.email || 'Email not found'}</span>
 					<span>{user.location || 'Location not found'}</span>
-					<span>{user.created_at}</span>
+					<span>{moment(user.created_at).format('MMM Do YYYY')}</span>
 					<span>{user.followers} followers</span>
 					<span>{user.following} following</span>
 				</div>
