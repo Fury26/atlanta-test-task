@@ -1,0 +1,49 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	margin-top: 2em;
+	margin-inline: auto;
+	max-width: 100vh;
+	overflow-x: hidden;
+
+	input {
+		margin: 1em auto;
+		width: 75%;
+		max-width: 200px;
+	}
+}
+
+.infoBlock {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 5em;
+
+	img {
+		max-width: 20em;
+		aspect-ratio: 1 / 1;
+	}
+
+	&Texts {
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+	}
+}
+
+.bio {
+	max-height: 300px;
+	overflow-wrap: normal;
+	overflow-y: auto;
+}
+
+.reposetories {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding-inline: 2em;
+	margin-inline: auto;
+	box-sizing: border-box;
+	gap: 12px;
+}

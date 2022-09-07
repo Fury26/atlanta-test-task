@@ -1,0 +1,25 @@
+.row {
+	width: 100%;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	background-color: lightblue;
+	align-items: center;
+	text-decoration: none;
+	cursor: pointer;
+	padding: 1em 1.5em;
+	color: black;
+
+	img {
+		aspect-ratio: 1 / 1;
+		clip-path: circle();
+		width: 48px;
+	}
+
+	&Name {
+		margin-left: 1em;
+	}
+
+	&RepoCount {
+		margin-right: 1em;
+	}
+}

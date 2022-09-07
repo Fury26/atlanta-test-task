@@ -42,7 +42,7 @@
 				"endOfLine": "auto"
 			}
 		],
-		"react/button-has-type": 0, // ? +- ok
+		"react/button-has-type": 0,
 		"react/jsx-key": ["warn", { "checkFragmentShorthand": true }],
 		"react/function-component-definition": [
 			0,
