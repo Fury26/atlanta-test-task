@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useStore } from 'effector-react';
+import { searchUsersByName } from 'github-api/requests';
+import $store from 'store/users';
+import { setUsers } from 'store/users/events';
 
-import Input from '../../../components/debaunce-input';
-import { searchUsersByName } from '../../../github-api/requests';
-import useDidUpdate from '../../../hooks/useDidUpdate';
+import useDidUpdate from 'hooks/useDidUpdate';
+
+import Input from 'components/debaunce-input';
+
 import UserRow from '../user-row';
 import styles from './index.module.scss';
 
-type T = Awaited<Promise<PromiseLike<ReturnType<typeof searchUsersByName>>>>;
-
 const SearchUsers: React.FC = () => {
 	const [searchName, setSearchName] = useState('');
-	const [users, setUsers] = useState<T>([]);
+	const { users } = useStore($store);
 
-	const updateUsers = async () => {
+	const updateUsers = useCallback(async () => {
 		const res = await searchUsersByName(searchName);
 		setUsers(res);
-		console.log('res', res);
-	};
+	}, [searchName]);
+
+	useDidUpdate(() => {
+		updateUsers();
+	}, [updateUsers, searchName]);
 
 	useEffect(() => {
-		updateUsers();
-	}, [searchName]);
+		!users.length && updateUsers();
+	}, []);
 
 	return (
 		<div className={styles.container}>

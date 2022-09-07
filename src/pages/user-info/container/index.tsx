@@ -1,18 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useStore } from 'effector-react';
+import { getUserByName, searchUserRepositories } from 'github-api/requests';
+import $reposetoriesStore from 'store/reposetories';
+import { setReposetories } from 'store/reposetories/events';
+import $usersStore from 'store/users';
+import { setCurrentUser } from 'store/users/events';
 
-import Input from '../../../components/debaunce-input';
-import { getUserByName, searchUserRepositories } from '../../../github-api/requests';
-import useDidUpdate from '../../../hooks/useDidUpdate';
+import useDidUpdate from 'hooks/useDidUpdate';
+
+import Input from 'components/debaunce-input';
+
 import ReposetoryRow from '../reposetory-row';
 import styles from './index.module.scss';
 
-type User = Awaited<Promise<PromiseLike<ReturnType<typeof getUserByName>>>>;
-type Reposetories = Awaited<Promise<PromiseLike<ReturnType<typeof searchUserRepositories>>>>;
-
 const UserInfo = () => {
-	const [user, setUser] = useState<User | null>(null);
-	const [reposetories, setReposetoires] = useState<Reposetories>([]);
+	const { currentUser: user } = useStore($usersStore);
+	const { reposetories } = useStore($reposetoriesStore);
 	const [repoName, setRepoName] = useState('');
 
 	const { id } = useParams();
@@ -23,7 +27,7 @@ const UserInfo = () => {
 			return navigate('/');
 		}
 		const res = await getUserByName(id);
-		setUser(res);
+		setCurrentUser(res);
 	}, [id, navigate]);
 
 	const searchRepositories = useCallback(async () => {
@@ -31,18 +35,26 @@ const UserInfo = () => {
 			return;
 		}
 		const res = await searchUserRepositories(id, repoName);
-		console.log('res', res);
-
-		setReposetoires(res);
+		setReposetories(res);
 	}, [id, repoName]);
 
 	useEffect(() => {
+		if (user?.login === id) {
+			return;
+		}
 		getUser();
-	}, [getUser]);
+	}, [getUser, id, user?.login]);
 
-	useEffect(() => {
+	useDidUpdate(() => {
 		searchRepositories();
 	}, [searchRepositories, repoName]);
+
+	useEffect(() => {
+		if (reposetories.length) {
+			return;
+		}
+		searchRepositories();
+	}, []);
 
 	if (!user) {
 		return null;

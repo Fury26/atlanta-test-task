@@ -17,3 +17,7 @@ export const searchUserRepositories = async (username: string, repoName: string 
 
 	return res.data;
 };
+
+export type Users = Awaited<Promise<PromiseLike<ReturnType<typeof searchUsersByName>>>>;
+export type Reposetories = Awaited<Promise<PromiseLike<ReturnType<typeof searchUserRepositories>>>>;
+export type User = Awaited<Promise<PromiseLike<ReturnType<typeof getUserByName>>>>;
